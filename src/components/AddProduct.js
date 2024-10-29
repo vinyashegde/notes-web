@@ -1,16 +1,26 @@
-// src/components/AddProduct.js
 import { useState } from "react";
 import { db, storage } from "../firebase"; // Import storage
 import { collection, addDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import storage functions
 import { useNavigate } from "react-router-dom";
 
-export default function AddProduct({ onProductAdded }) { // Accept onProductAdded as prop
+export default function AddProduct({ onProductAdded }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [category, setCategory] = useState(""); // State for category
   const [image, setImage] = useState(null); // State to hold the uploaded image
   const navigate = useNavigate();
+
+  // Predefined categories
+  const categories = [
+    "Books",
+    "Electronics",
+    "Fashion",
+    "Home & Kitchen",
+    "Toys",
+    "Sports",
+  ];
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -25,18 +35,19 @@ export default function AddProduct({ onProductAdded }) { // Accept onProductAdde
       alert("Please select an image to upload.");
       return;
     }
-    
+
     try {
       // Upload image to Firebase Storage
       const imageRef = ref(storage, `products/${image.name}`);
       await uploadBytes(imageRef, image);
       const imageUrl = await getDownloadURL(imageRef); // Get the download URL for the uploaded image
 
-      // Add product to Firestore with image URL
+      // Add product to Firestore with image URL and category
       await addDoc(collection(db, "products"), {
         title,
         description,
         price: parseFloat(price),
+        category, // Save the category in Firestore
         imageUrl, // Save the image URL in Firestore
       });
 
@@ -45,6 +56,7 @@ export default function AddProduct({ onProductAdded }) { // Accept onProductAdde
       setTitle("");
       setDescription("");
       setPrice("");
+      setCategory(""); // Reset category state
       setImage(null); // Reset the image state
       navigate("/"); // Redirect to home page
     } catch (error) {
@@ -79,6 +91,19 @@ export default function AddProduct({ onProductAdded }) { // Accept onProductAdde
         className="w-full p-2 border rounded"
         required
       />
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        className="w-full p-2 border rounded"
+        required
+      >
+        <option value="" disabled>Select Category</option>
+        {categories.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
       <input
         type="file" // File input for image
         accept="image/*" // Accept only image files
