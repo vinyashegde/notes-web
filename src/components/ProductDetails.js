@@ -24,14 +24,41 @@ export default function ProductDetails({ user, userRole }) {
 
   if (!product) return <p>Loading...</p>;
 
+  const handleBuyNow = () => {
+    alert(`Purchasing ${product.title}`);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header user={user} userRole={userRole} />
       <div className="p-8">
         <h1 className="text-3xl font-bold">{product.title}</h1>
-        <img src={product.imageUrl} alt={product.title} className="mt-4 max-w-full h-auto" /> {/* Display image */}
-        <p className="mt-2 text-gray-600">{product.description}</p>
-        <p className="mt-4 font-bold text-blue-600">${product.price}</p>
+        <div className="mt-4 w-64 h-40 overflow-hidden relative">
+          <img
+            src={product.imageUrl}
+            alt={product.title}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
+        
+        <div className="mt-4">
+          <p className="text-gray-600">{product.description}</p>
+          <p className="mt-4 font-bold text-blue-600">${product.price}</p>
+          <button
+            onClick={handleBuyNow}
+            className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            Buy Now
+          </button>
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold">Additional Information</h2>
+          <ul className="list-disc list-inside mt-2">
+            <li><strong>Category:</strong> {product.category || "N/A"}</li>
+            <li><strong>Stock:</strong> {product.stock || "N/A"}</li>
+          </ul>
+        </div>
       </div>
       <Footer />
     </div>
