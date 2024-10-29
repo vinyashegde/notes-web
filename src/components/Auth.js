@@ -38,39 +38,41 @@ export default function Auth() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold">{isLogin ? "Login" : "Sign Up"}</h2>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        className="w-full p-2 border rounded"
-        required
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        className="w-full p-2 border rounded"
-        required
-      />
-      <div className="flex justify-center">
-        <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded">
-          {isLogin ? "Login" : "Create User"} {/* Update button text accordingly */}
-        </button>
-      </div>
-      <p>
-        {isLogin ? "Don't have an account? " : "Already have an account? "}
-        <button
-          type="button"
-          onClick={() => setIsLogin(!isLogin)}
-          className="text-blue-600"
-        >
-          {isLogin ? "Sign Up" : "Login"}
-        </button>
-      </p>
-    </form>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100"> {/* Centering the form */}
+      <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-white rounded shadow-md max-w-md w-full"> {/* Added w-full for responsiveness */}
+        <h2 className="text-2xl font-bold text-center">{isLogin ? "Login" : "Sign Up"}</h2>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300" // Added focus styles
+          required
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+          className="w-full p-2 border rounded focus:outline-none focus:ring focus:ring-blue-300" // Added focus styles
+          required
+        />
+        <div className="flex justify-center">
+          <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-200"> {/* Hover effects */}
+            {isLogin ? "Login" : "Create User"} {/* Update button text accordingly */}
+          </button>
+        </div>
+        <p className="text-center">
+          {isLogin ? "Don't have an account? " : "Already have an account? "}
+          <button
+            type="button"
+            onClick={() => setIsLogin(!isLogin)}
+            className="text-blue-600 hover:underline"
+          >
+            {isLogin ? "Sign Up" : "Login"}
+          </button>
+        </p>
+      </form>
+    </div>
   );
 }

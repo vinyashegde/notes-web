@@ -8,6 +8,7 @@ import Auth from "./components/Auth";
 import Home from "./components/Home";
 import AddProduct from "./components/AddProduct";
 import Admin from "./components/Admin";
+import ProductDetails from "./components/ProductDetails";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,6 +40,7 @@ function App() {
         <Route path="/login" element={<Auth />} />
         <Route path="/add-product" element={<AddProduct />} />
         <Route path="/admin" element={userRole === "admin" ? <Admin /> : <Home />} />
+        <Route path="/product/:id" element={<ProductDetails user={user} userRole={userRole} />} />
       </Routes>
     </div>
   );

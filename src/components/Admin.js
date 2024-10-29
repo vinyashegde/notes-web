@@ -1,17 +1,15 @@
 // src/components/Admin.js
 import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
-import { collection, getDocs, deleteDoc, doc, setDoc, addDoc, getDoc } from "firebase/firestore";
+import { collection, getDocs, deleteDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import AddProduct from "./AddProduct"; // Import AddProduct component
 
 export default function Admin() {
   const [products, setProducts] = useState([]);
   const [newAdminEmail, setNewAdminEmail] = useState("");
   const [newAdminPassword, setNewAdminPassword] = useState("");
-  const [newProductTitle, setNewProductTitle] = useState("");
-  const [newProductDescription, setNewProductDescription] = useState("");
-  const [newProductPrice, setNewProductPrice] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
@@ -25,6 +23,8 @@ export default function Admin() {
         } else {
           navigate("/"); // Redirect non-admin users to Home
         }
+      } else {
+        navigate("/"); // Redirect if not logged in
       }
     };
 
@@ -56,25 +56,6 @@ export default function Admin() {
     } catch (error) {
       console.error("Error creating admin:", error);
       alert("Error creating admin: " + error.message);
-    }
-  };
-
-  const handleAddProduct = async (e) => {
-    e.preventDefault();
-    try {
-      await addDoc(collection(db, "products"), {
-        title: newProductTitle,
-        description: newProductDescription,
-        price: parseFloat(newProductPrice),
-      });
-      alert("Product added successfully!");
-      setNewProductTitle("");
-      setNewProductDescription("");
-      setNewProductPrice("");
-      fetchProducts(); // Refresh products list
-    } catch (error) {
-      console.error("Error adding product:", error);
-      alert("Error adding product: " + error.message);
     }
   };
 
@@ -118,36 +99,8 @@ export default function Admin() {
         </button>
       </form>
 
-      {/* Add Product Form */}
-      <form onSubmit={handleAddProduct} className="mb-6">
-        <h2 className="text-xl">Add Product</h2>
-        <input
-          type="text"
-          value={newProductTitle}
-          onChange={(e) => setNewProductTitle(e.target.value)}
-          placeholder="Product Title"
-          className="w-full p-2 border rounded mb-2"
-          required
-        />
-        <textarea
-          value={newProductDescription}
-          onChange={(e) => setNewProductDescription(e.target.value)}
-          placeholder="Product Description"
-          className="w-full p-2 border rounded mb-2"
-          required
-        />
-        <input
-          type="number"
-          value={newProductPrice}
-          onChange={(e) => setNewProductPrice(e.target.value)}
-          placeholder="Product Price"
-          className="w-full p-2 border rounded mb-2"
-          required
-        />
-        <button type="submit" className="p-2 bg-green-600 text-white rounded">
-          Add Product
-        </button>
-      </form>
+      {/* Add Product Component */}
+      <AddProduct onProductAdded={fetchProducts} /> {/* Pass fetchProducts as prop */}
 
       {/* Products List */}
       <h2 className="text-xl">Manage Products</h2>
